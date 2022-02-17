@@ -5,7 +5,7 @@ import os
 import json
 # %%
 url = 'https://www.kidsnote.com/login/'
-with open('student_data.json','r') as f:
+with open('student_data.json','r', encoding='utf-8') as f:
     json_data = json.load(f)
     child_name = json_data['name']
     child_profile = json_data['profile']
