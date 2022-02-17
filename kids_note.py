@@ -20,6 +20,7 @@ except:
 
 
 # %%
+
 driver = webdriver.Chrome(executable_path='chromedriver')
 driver.get(url=url)
 
@@ -72,7 +73,10 @@ for item in sidebar_items:
 
 def img_download(links):
     for link in links:
-        res = requests.get(link)
+        try:
+            res = requests.get(link)
+        except:
+            print(f'{link} is not available')
         file_name = link.split('/')[-2]
         total_name= f'{foldername}/{file_name}.jpg'
         with open(total_name, 'wb') as f:
@@ -87,7 +91,7 @@ def get_album(id):
     try:
         driver.find_element(By.XPATH, ad_xpath).click()
     except:
-        print('no popup')
+        a = 1 
     imgs = driver.find_element(By.ID, 'img-grid-container')
     img_links = imgs.find_elements(By.TAG_NAME, 'a')
     img_links = list(map(lambda x: x.get_attribute('href'), img_links))
@@ -106,12 +110,12 @@ while(True):
             driver.find_element(By.XPATH, ad_xpath)
             driver.back()
         except:
-            print('no popup')
+            a = 1 
     try:
         next_link = driver.find_element(By.CLASS_NAME, 'next')
         next_link.find_element(By.TAG_NAME, 'a').click()
     except:
-        print('download end')
+        print('download finished')
         break
 
 # %%
