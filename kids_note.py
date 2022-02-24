@@ -3,6 +3,8 @@ from selenium import webdriver
 import requests
 import os
 import json
+import chromedriver_autoinstaller
+import sys
 # %%
 url = 'https://www.kidsnote.com/login/'
 with open('student_data.json','r', encoding='utf-8') as f:
@@ -20,7 +22,14 @@ except:
 
 
 # %%
-driver = webdriver.Chrome(executable_path='chromedriver')
+chrome_ver = chromedriver_autoinstaller.get_chrome_version().split('.')[0]
+driver_path = f'./{chrome_ver}/chromedriver.exe'
+if os.path.exists(driver_path):
+    print(f"chrom driver is insatlled: {driver_path}")
+else:
+    print(f"install the chrome driver(ver: {chrome_ver})")
+    chromedriver_autoinstaller.install(True)
+driver = webdriver.Chrome(executable_path=driver_path)
 driver.get(url=url)
 
 # %%
@@ -36,11 +45,16 @@ for form in submit_forms:
         break
 
 # %%
-driver.find_element(By.CSS_SELECTOR, 'body > header > div.header-inner > ul > li > a').click()
+try:
+    driver.find_element(By.CSS_SELECTOR, 'body > header > div.header-inner > ul > li > a').click()
+    chr_list = driver.find_element(By.CSS_SELECTOR, 'body > header > div.header-inner > ul > li > ul')
+except:
+    print('login failed')
+    sys.exit()
+
 
 # %%
 # 리스트 수정 필요
-chr_list = driver.find_element(By.CSS_SELECTOR, 'body > header > div.header-inner > ul > li > ul')
 
 # %%
 albums = []
